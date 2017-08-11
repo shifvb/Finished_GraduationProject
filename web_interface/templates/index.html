@@ -1,0 +1,389 @@
+{% extends 'base/base.html' %}
+{% block css_links %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/toastr/toastr.css') }}">
+{% endblock %}
+{% block body %}
+
+    {# 顶栏 #}
+    <div class="header">
+        <div class="userinfo">
+            <p class="username"></p>
+            <p class="btn logout">logout</p>
+        </div>
+        <div class="welcomebar">
+            <p class="h1">Medical Feature Extraction System</p>
+        </div>
+    </div>
+
+    {# 侧边栏 #}
+    <div class="sidebar">
+        <ul>
+            <li class="btn sidebar_btn" data-panel="1">Train Set</li>
+            <li class="btn sidebar_btn" data-panel="2">Test Set</li>
+            <li class="btn sidebar_btn" data-panel="3">Classification</li>
+        </ul>
+    </div>
+
+
+    <div class="main_panels">
+        {# 加载训练集界面 #}
+        <div class="main_panel extracting_train_data" data-panel="1">
+            {# 加载训练集界面 -> 上传文件分界面 #}
+            <div class="upload_files">
+                <h1>Upload Data</h1>
+                <div class="load_data">
+                    <h2>Train Images(1):</h2>
+                    <form class="form" method="POST" enctype="multipart/form-data">
+                        <div class="file"><span>no file</span><input type="file" name="file"></div>
+                        <input type="hidden" name="is_train_data" value="true">
+                        <input type="hidden" name="is_image_data" value="true">
+                        <input type="hidden" name="part_num" value="1">
+                    </form>
+                    <div class="btn">Upload File</div>
+                </div>
+                <div class="load_data">
+                    <h2>Train Images(2):</h2>
+                    <form class="form" action="" method="POST" enctype="multipart/form-data">
+                        <div class="file"><span>no file</span><input type="file" name="file"></div>
+                        <input type="hidden" name="is_train_data" value="true">
+                        <input type="hidden" name="is_image_data" value="true">
+                        <input type="hidden" name="part_num" value="2">
+                    </form>
+                    <div class="btn">Upload File</div>
+                </div>
+                <div class="load_data">
+                    <h2>Train Labels(1):</h2>
+                    <form class="form" action="" method="POST" enctype="multipart/form-data">
+                        <div class="file"><span>no file</span><input type="file" name="file"></div>
+                        <input type="hidden" name="is_train_data" value="true">
+                        <input type="hidden" name="is_image_data" value="false">
+                        <input type="hidden" name="part_num" value="1">
+                    </form>
+                    <div class="btn">Upload File</div>
+                </div>
+                <div class="load_data">
+                    <h2>Train Labels(2):</h2>
+                    <form class="form" action="" method="POST" enctype="multipart/form-data">
+                        <div class="file"><span>no file</span><input type="file" name="file"></div>
+                        <input type="hidden" name="is_train_data" value="true">
+                        <input type="hidden" name="is_image_data" value="false">
+                        <input type="hidden" name="part_num" value="2">
+                    </form>
+                    <div class="btn">Upload File</div>
+                </div>
+            </div>
+            {# 加载训练集界面 -> 数据信息分界面 #}
+            <div class="data_detail">
+                <h1>Data Detail</h1>
+                <table cellspacing="0" cellpadding="0">
+                    <tr>
+                        <th>Type</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Total image number</td>
+                        <td class="img_num">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Image data type</td>
+                        <td class="dtype">unknown</td>
+                    </tr>
+                    <tr>
+                        <td>Image shape</td>
+                        <td class="shape">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Liver image number</td>
+                        <td class="liver_num">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Lymphoma image number</td>
+                        <td class="lymphoma_num">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Background image number</td>
+                        <td class="bgc_num">N/A</td>
+                    </tr>
+                </table>
+                <div class="btn analyze_data_btn" data-train="true">Analyze data</div>
+            </div>
+            {# 加载训练集界面 -> 特征提取分界面 #}
+            <div class="combine_data">
+                <h1>Feature Extraction</h1>
+                <div class="btn combine_data_btn" data-train="combine_train_data">Extract Feature</div>
+            </div>
+            {# 加载训练集界面 -> 显示部分特征图界面 #}
+            <div class="show_feature_maps">
+                <h1>Feature Map Examples</h1>
+                <div class="feature_maps"></div>
+                <div class="btn show">show(random)</div>
+            </div>
+        </div>
+
+        {# 加载测试集界面 #}
+        <div class="main_panel extracting_test_data" data-panel="2">
+            {# 加载测试集界面 -> 上传文件分界面 #}
+            <div class="upload_files">
+                <h1>Upload Data</h1>
+                <div class="load_data">
+                    <h2>Test Images(1):</h2>
+                    <form class="form" method="POST" enctype="multipart/form-data">
+                        <div class="file"><span>no file</span><input type="file" name="file"></div>
+                        <input type="hidden" name="is_train_data" value="false">
+                        <input type="hidden" name="is_image_data" value="true">
+                        <input type="hidden" name="part_num" value="1">
+                    </form>
+                    <div class="btn">Upload File</div>
+                </div>
+                <div class="load_data">
+                    <h2>Test Images(2):</h2>
+                    <form class="form" action="" method="POST" enctype="multipart/form-data">
+                        <div class="file"><span>no file</span><input type="file" name="file"></div>
+                        <input type="hidden" name="is_train_data" value="false">
+                        <input type="hidden" name="is_image_data" value="true">
+                        <input type="hidden" name="part_num" value="2">
+                    </form>
+                    <div class="btn">Upload File</div>
+                </div>
+                <div class="load_data">
+                    <h2>Test Labels(1):</h2>
+                    <form class="form" action="" method="POST" enctype="multipart/form-data">
+                        <div class="file"><span>no file</span><input type="file" name="file"></div>
+                        <input type="hidden" name="is_train_data" value="false">
+                        <input type="hidden" name="is_image_data" value="false">
+                        <input type="hidden" name="part_num" value="1">
+                    </form>
+                    <div class="btn">Upload File</div>
+                </div>
+                <div class="load_data">
+                    <h2>Test Labels(2):</h2>
+                    <form class="form" action="" method="POST" enctype="multipart/form-data">
+                        <div class="file"><span>no file</span><input type="file" name="file"></div>
+                        <input type="hidden" name="is_train_data" value="false">
+                        <input type="hidden" name="is_image_data" value="false">
+                        <input type="hidden" name="part_num" value="2">
+                    </form>
+                    <div class="btn">Upload File</div>
+                </div>
+            </div>
+            {# 加载测试集界面 -> 特征提取分界面 #}
+            <div class="combine_data">
+                <h1>Feature Extraction</h1>
+                <div class="btn combine_data_btn" data-train="combine_test_data">Extract Feature</div>
+            </div>
+        </div>
+
+        {# 分类界面 #}
+        <div class="main_panel classification" data-panel="3">
+            <div class="classify_data">
+                <h1>Classification</h1>
+                <div class="clssify_result">
+                    <div>Accuracy:</div>
+                    <div>N/A</div>
+                </div>
+                <div class="btn classify_data_btn">Classify</div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jQuery/jquery-3.2.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/toastr/toastr.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            // 界面显示用户名
+            $(".header .username").text(localStorage.username);
+
+            // logout按钮功能
+            $(".header .logout").on("click", function () {
+                $.ajax({
+                    "url": "{{ url_for('logout') }}",
+                    "type": "POST",
+                    "dataType": "json",
+                    "async": "true",
+                    "success": function (data) {
+                        if (data.result == true) {
+                            toastr.success("Logout succeed.");
+                            location.href = "{{ url_for('login') }}"
+                        } else {
+                            toastr.warning("Logout failed. Please try it again later.")
+                        }
+                    },
+                    "error": function () {
+                        toastr.error("Server Internal Error!");
+                    }
+                })
+            });
+
+            // 侧边栏按钮事件
+            var current_display_panel_str = "1";
+            $(".sidebar_btn").on("click", function () {
+
+                var $main_panels = $(".main_panel");
+                $main_panels.each(function (i, x) {
+                    if ($(x).data("panel") == current_display_panel_str) {
+                        $(x).fadeOut(500); // 淡出
+                    }
+                });
+                current_display_panel_str = $(this).data("panel");
+                setTimeout(function () {
+                    $main_panels.each(function (i, x) {
+                        if ($(x).data("panel") == current_display_panel_str) {
+                            $(x).fadeIn(); // 淡入
+                        }
+                    });
+                }, 500);
+            });
+
+            // (panel_event_1) (加载测试集panel，加载训练集panel) 加载文件按钮事件
+            $(".load_data .btn").on("click", function () {
+                var formData = new FormData($(this).parent().find(".form")[0]);
+                $.ajax({
+                    "url": "{{ url_for("save_files") }}",
+                    "type": "POST",
+                    "async": "false",
+                    "data": formData,
+                    "contentType": false, {# 必须false才会自动加上正确的Content-Type  #}
+                    "processData": false, {# 必须false才会避开jQuery对 formdata 的默认处理 XMLHttpRequest会对 formdata 进行正确的处理 #}
+                    "success": function (data) {
+                        if (data.result == true) {
+                            toastr.info("upload succeed!");
+                        } else {
+                            toastr.warning('upload failed!');
+                        }
+                    },
+                    "error": function () {
+                        toastr.error("Internal Server Error!");
+                    }
+                })
+            });
+
+            // (panel_event_2)(加载训练集panel) analyze按钮事件
+            $(".analyze_data_btn").on("click", function () {
+                $.ajax({
+                    "url": "{{ url_for('analyze_data') }}",
+                    "async": "true",
+                    "type": "POST",
+                    "dataType": "json",
+                    "data": {
+                        "is_analyze_train_data": $(this).data("train")
+                    },
+                    "success": function (data) {
+                        if (data.result == true) {
+                            var result_data = data.data;
+                            var $the_table = $(".extracting_train_data");
+                            $the_table.find(".img_num").text(result_data["img_num"]);
+                            $the_table.find(".dtype").text(result_data["dtype"]);
+                            $the_table.find(".shape").text(result_data["shape"]);
+                            $the_table.find(".liver_num").text(result_data["liver_img_num"]);
+                            $the_table.find(".lymphoma_num").text(result_data["lymphoma_img_num"]);
+                            $the_table.find(".bgc_num").text(result_data["bg_img_num"]);
+                            toastr.info("analyze complete!");
+                        } else {
+                            toastr.warning("analyze failed!");
+                        }
+                    },
+                    "error": function () {
+                        toastr.error("Server Internal Error!");
+                    }
+                })
+            });
+
+            // (panel_event_3)(加载训练集panel, 加载测试集panel) 提取特征按钮事件
+            $(".combine_data > .combine_data_btn").on("click", function () {
+                var is_combine_train_data = $(this).data("train") == "combine_train_data";
+                $.ajax({
+                    "url": "{{ url_for("combine_data") }}",
+                    "type": "POST",
+                    "dataType": "json",
+                    "async": "false",
+                    "data": {
+                        "is_combine_train_data": is_combine_train_data
+                    },
+                    "success": function (data) {
+                        if (data.result == true) {
+                            toastr.success("Extraction succeed!");
+                        } else {
+                            toastr.warning("Extraction failed!");
+                        }
+                    },
+                    "error": function () {
+                        toastr.error("Server Internal Error!");
+                    }
+                })
+            });
+
+            // (panel_event_4)(加载训练集panel) 显示特征图按钮事件
+            $(".show_feature_maps .show").on("click", function () {
+                $.ajax({
+                    "url": "{{ url_for('show_feature_maps') }}",
+                    "async": true,
+                    "type": "POST",
+                    "dataType": "json",
+                    "data": {
+                        "is_show_train_data_feature_maps": true
+                    },
+                    "success": function (data) {
+                        if (data.result == true) {
+                            var result_data = data.data;
+                            var $target_div = $(".show_feature_maps .feature_maps");
+                            $target_div[0].innerHTML = "";
+
+                            // 充填DOM
+                            var str_to_be_filled = ""
+                            var img_urls = result_data["img_urls"];
+                            for (var i in img_urls) {
+                                str_to_be_filled += "<img src=\"" + img_urls[i] + "\">";
+                                console.log(img_urls[i]);
+                                $target_div[0].innerHTML = str_to_be_filled;
+                            }
+                        } else {
+                            toastr.warning("failed get feature maps!")
+                        }
+                    },
+                    "error": function () {
+                        toastr.error("Server Internal Error!");
+                    }
+                })
+            });
+
+            // (panel_event_5)(分类panel) 分类按钮事件
+            $(".classify_data_btn").on("click", function() {
+               $.ajax({
+                   "url": "{{ url_for('classification') }}",
+                   "async": "true",
+                   "type": "POST",
+                   "dataType": "json",
+                   "data": {},
+                   "success": function(result) {
+                       if (result.result == true) {
+                           toastr.success("classification complete!");
+                           var data = result["data"];
+                           $(".clssify_result").children()[1].innerHTML = data["accuracy"];
+                       } else {
+                           toastr.success("operation failed!");
+                       }
+                   },
+                   "error": function() {
+                       toastr.error("Server Internal Error!");
+                   }
+               })
+            });
+
+            // file控件
+            $(".file").on("change", "input[type='file']", function () {
+                var filePath = $(this).val();
+                var fileList = filePath.split("\\");
+                var filename = fileList[fileList.length - 1];
+                $(this).parent().find("span").text(filename);
+            })
+        });
+
+
+    </script>
+{% endblock %}
+

@@ -1,0 +1,47 @@
+{% extends "base/base.html" %}
+{% block body %}
+    <p>username:</p>
+    <input id="username" type="text" name="username"/>
+    <p>password:</p>
+    <input id="password" type="password" name="password"/>
+    <p><input id="login_btn" type="button" value="Login"></p>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jQuery/jquery-3.2.1.min.js') }}"></script>
+    <script type="text/javascript">
+        $("#login_btn").on("click", function (event) {
+            var username = $("#username").val();
+            var password = $("#password").val();
+            if (username == "") {
+                alert("username cannot be empty!");
+                return;
+            }
+            if (password == "") {
+                alert("password cannot be empty!");
+                return;
+            }
+            $.ajax({
+                "url": "{{ url_for('login') }}",
+                "type": "post",
+                "datatype": "json",
+                "async": "true",
+                "data": {
+                    "username": username,
+                    "password": password
+                },
+                "success": function (json_data) {
+                    var result = json_data['result'];
+                    if (result) {
+                        localStorage.username = username;
+                        location.href = "{{ url_for("index") }}";
+                    } else {
+                        alert(json_data['reason']);
+                    }
+                },
+                "error": function (json_data) {
+                    alert("Server Internal error!");
+                }
+            })
+        });
+    </script>
+{% endblock %}
